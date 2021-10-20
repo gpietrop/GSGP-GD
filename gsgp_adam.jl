@@ -175,11 +175,11 @@ function update_params(gen, gradient, learning_rate)
     gen
 end
 
-function update_params(gen::Generation, gradient, learning_rate)
+function update_params(gen::Generation, gradient, learning_rate, mom)
     g1 = map(x -> clamp.(x, -0.5, 0.5), gradient[1])
     g2 = map(x -> clamp.(x, -0.5, 0.5), gradient[2])
     
-    opt = ADAM()
+    opt = ADAM(learning_rate, mom)
     
     new_params = update!(opt, hcat(gen.params...)', hcat(g1...)')
     new_params = slicematrix(new_params)
@@ -223,7 +223,7 @@ function read_dataset(basename, n)
     Dataset(n_vars, train_x, train[:,end], test_x, test[:,end])
 end
 
-function experiment(dname, n, outfile, num_gen_1, num_gen_2, learning_rate, population_size, k1, k2)
+function experiment(dname, n, outfile, num_gen_1, num_gen_2, learning_rate, population_size, mom, k1, k2)
     d = read_dataset(dname, n)
     n_vars = d.n_vars
     ops = [+, -, *, pdiv]
@@ -295,7 +295,7 @@ function experiment(dname, n, outfile, num_gen_1, num_gen_2, learning_rate, popu
             par = extract_params(hist_HYB[i])
             f = make_loss(hist_HYB[i], d.train_x, d.train_y)
             g = gradient(f, par)[1]
-            hist_HYB[i] = update_params(hist_HYB[i], g, learning_rate)
+            hist_HYB[i] = update_params(hist_HYB[i], g, learning_rate, mom)
             f_train, best_idx = best_fitness(hist_HYB[i], d.train_x, d.train_y)
             push!(res_HYB, f_train)
             f_test = individual_fitness(hist_HYB[i], d.test_x, d.test_y, best_idx)
@@ -331,7 +331,7 @@ function experiment(dname, n, outfile, num_gen_1, num_gen_2, learning_rate, popu
         par = extract_params(hist_NEW_2[i-1])
         f = make_loss(hist_NEW_2[i-1], d.train_x, d.train_y)
         g = gradient(f, par)[1]
-        hist_NEW_2[i] = update_params(hist_NEW_2[i-1], g, learning_rate)
+        hist_NEW_2[i] = update_params(hist_NEW_2[i-1], g, learning_rate, mom)
         
         f_train, best_idx = best_fitness(hist_NEW_2[i], d.train_x, d.train_y)
         f_test = individual_fitness(hist_NEW_2[i], d.test_x, d.test_y, best_idx)
@@ -353,24 +353,47 @@ end
 
 
 function main()
-    dname = "yacht"
-    print("\n DATASET CONSIDERED : "*dname*"\n")
-    p = [ (1,1) ]
-    for i=1:100
-        for (k1, k2) in p
-            num_gen_1 = 50
-            num_gen_2 = 50
-            learning_rate = 0.0001
-            population_size = 50
-            print("\nExperiment $(i)")
-            
-            path = "results/$(dname)/$(num_gen_1)-$(num_gen_2)-$(population_size)-$(learning_rate)"
-            if isdir(path) == 0
-                mkdir(path)
+    # for dname in ["yacht", "bioav", "slump", "toxicity",  "airfoil", "concrete", "ppb", "parkinson"]
+    for dname in ["parkinson"]
+    # dname = "yacht" -
+    # dname = "slump" -
+    # dname = "concrete" -
+    # dname = "airfoil" -
+    # dname = "toxicity" -
+    # dname = "ppb"
+    # dname = "bioav" -
+    # dname = "parkinson"
+        p = [ (1,1) ]
+        for i=1:100
+            for (k1, k2) in p
+                num_gen_1 = 100
+                num_gen_2 = 100
+                learning_rate = 0.1 #0.01
+                mom = (0.9, 0.99)
+                population_size = 50
+                print("\n DATASET CONSIDERED : "*dname*"\n")
+                print("\nExperiment $(i)\n")
+                
+                
+                path1 = "results"
+                if isdir(path1) == 0
+                    mkdir(path1)
+                end
+                
+                
+                path2 = "results/$(dname)"
+                if isdir(path2) == 0
+                    mkdir(path2)
+                end
+                
+                path = "results/$(dname)/$(num_gen_1)-$(num_gen_2)-$(population_size)-$(learning_rate)"
+                if isdir(path) == 0
+                    mkdir(path)
+                end
+                experiment(dname, i, path * "/results-$(i)", num_gen_1, num_gen_2, learning_rate, population_size, mom, k1, k2)
             end
-            experiment(dname, i, path * "/results-$(i)", num_gen_1, num_gen_2, learning_rate, population_size, k1, k2)
         end
-    end
+    end       
 end
 
 
