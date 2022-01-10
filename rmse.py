@@ -12,9 +12,7 @@ epochs = ep1 + ep2
 
 num_exp = 70
 
-# for dname in ["yacht", "bioav", "slump", "concrete", "toxicity"]: 
-# for dname in ["yacht", "bioav", "slump", "toxicity", "ppb", "concrete", "airfoil"]: 
-for dname in ["parkinson"]:
+for dname in ["yacht", "bioav", "slump", "toxicity", "ppb", "concrete", "airfoil", "parkinson"]:
     dire = "results/" + dname + "/" + str(ep1) + "-" + str(ep2) + "-" + str(pop) + "-" + str(lr) 
     
     TrainErr_GP_List, TestErr_GP_List = [], []
