@@ -184,9 +184,7 @@ function update_params(gen::Generation, gradient, learning_rate, mom)
     new_params = update!(opt, hcat(gen.params...)', hcat(g1...)')
     new_params = slicematrix(new_params)
     
-    # new_rnd = gen.random_steps - learning_rate .* g2
     new_rnd = update!(opt, hcat(gen.random_steps...)', hcat(g2...)')
-    # new_rnd = slicematrix(new_rnd)
     
     new_parents = update_params(gen.parent_population, gradient[3:end], learning_rate)
     Generation(new_parents, gen.parents_idx, new_rnd, gen.random_trees, new_params)
@@ -311,7 +309,6 @@ function experiment(dname, n, outfile, num_gen_1, num_gen_2, learning_rate, popu
     
         end
     end
-    # print(out_res, "$(f_train)\t$(f_test)\n")
     
     
     print("\nNEW CASE\n")
@@ -356,16 +353,7 @@ end
 
 
 function main()
-    # for dname in ["yacht", "bioav", "slump", "toxicity",  "airfoil", "concrete", "ppb", "parkinson"]
-    for dname in ["slump"]
-    # dname = "yacht" -
-    # dname = "slump" -
-    # dname = "concrete" -
-    # dname = "airfoil" -
-    # dname = "toxicity" -
-    # dname = "ppb"
-    # dname = "bioav" -
-    # dname = "parkinson"
+    for dname in ["yacht", "bioav", "slump", "toxicity",  "airfoil", "concrete", "ppb", "parkinson"]
         p = [ (1,1) ]
         for i=1:100
             for (k1, k2) in p
