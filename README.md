@@ -40,4 +40,4 @@ For example, for the __airfoil__ benchmark problem, the comparison of the fitnes
 
 
 
-<img src="/img/airfoil_Test_BP.png" width="350" height="300"><img src="/img/airfoil_Train_BP.png" width="350" height="300"> 
+<img src="/img/airfoil_Train_BP.png" width="350" height="300"> <img src="/img/airfoil_Test_BP.png" width="350" height="300"> 
