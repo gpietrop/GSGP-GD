@@ -28,9 +28,18 @@ The script automatically perform the experiments for all the considered benchmar
 - _concrete slump_
 - _concrete compressive strenght_
 - _airfoil self-noise_
+
 that are saved in the `dataset` folder.
 
 The code to reproduce the plot of the paper is contained in the folder `plot`, it is sufficient to run:
 ```bash
 python3 boxplot.py 
 ```
+
+For example, for the __airfoil__ benchmark problem, the comparison of the fitness results obtained for training and testing set for different methods analyzed is: 
+
+
+
+<img src="/img/airfoil_Test_BP.png" width="350" height="300"> <img src="/img/send-in-3-fitness-subplot_comparison.png" width="250" height="200">
+<img src="/img/airfoil_Train_BP.png" width="350" height="300"> <img src="/img/send-in-5-fitness-subplot_comparison.png" width="250" height="200">
+
