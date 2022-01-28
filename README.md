@@ -18,6 +18,7 @@ that will return the fitness results for the 100 runs performed for the followin
 - __GSGP__
 - __HYB-GSGP__
 - __HeH-GSGP__
+
 and save them in the `results` folder.
 
 The script automatically perform the experiments for all the considered benchmark problems, that are: 
